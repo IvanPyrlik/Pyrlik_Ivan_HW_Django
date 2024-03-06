@@ -25,7 +25,6 @@ class Product(models.Model):
     date_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     date_last_change = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
 
-
     def __str__(self):
         return f'{self.name} {self.description} {self.price}'
 
