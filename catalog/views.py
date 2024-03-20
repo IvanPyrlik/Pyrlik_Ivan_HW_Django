@@ -1,32 +1,34 @@
 from django.shortcuts import render
+from django.views.generic import ListView, DetailView, TemplateView
 
 from catalog.models import Product
 
 
-def products(request):
-    context = {
-        'object_list': Product.objects.all(),
+class ProductListView(ListView):
+    model = Product
+    extra_context = {
         'title': 'Магазин продуктов'
     }
-    return render(request, 'catalog/products.html', context)
 
 
-def contacts(request):
-    context = {
+class ContactTemplateView(TemplateView):
+    template_name = 'catalog/contacts.html'
+    extra_context = {
         'title': 'Контакты'
     }
-    if request.method == 'POST':
-        name = request.POST.get('name')
-        phone = request.POST.get('phone')
-        message = request.POST.get('message')
-        print(f'Ваше {name}, ваш телефон {phone}, ваше сообщение {message}')
-    return render(request, 'catalog/contacts.html', context)
 
 
-def product(request, pk):
-    product_item = Product.objects.get(pk=pk)
-    context = {
-        'object_list': Product.objects.filter(id=pk),
-        'title': f'{product_item.name}'
-    }
-    return render(request, 'catalog/product.html', context)
+class ProductDetailView(DetailView):
+    model = Product
+
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        queryset = queryset.filter(pk=self.kwargs.get('pk'))
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context_data = super().get_context_data(**kwargs)
+        product_item = Product.objects.get(pk=self.kwargs.get('pk'))
+        context_data['product'] = product_item
+        context_data['object_list'] = Product.objects.filter(id=self.kwargs.get('pk'))
+        return context_data
