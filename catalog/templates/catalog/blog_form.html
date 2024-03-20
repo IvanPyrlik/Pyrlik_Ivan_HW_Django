@@ -1,0 +1,13 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class=" pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+            <button type="submit" class="btn btn-lg btn-block btn-outline-dark">Добавить отзыв<</button>
+            <a href="{% url 'catalog:blog_list' %}" type="button"
+               class="btn btn-lg btn-block btn-outline-primary">Отмена</a>
+        </div>
+    </form>
+{% endblock %}

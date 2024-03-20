@@ -47,7 +47,7 @@ class Blog(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-        ordering = ['date_create', 'publication', 'view_count', ]
+        ordering = ['first_name', 'last_name', 'content',]
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} {self.avatar} {self.content}'

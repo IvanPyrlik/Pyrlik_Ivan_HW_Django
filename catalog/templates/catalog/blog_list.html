@@ -1,0 +1,31 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+    <div class="row text-center">
+        <a href="{% url 'catalog:blog_create' %}" type="button"
+           class="btn btn-lg btn-block btn-outline-success mb-3">Написать отзыв</a>
+        {% for object in object_list %}
+            {% if object.publication %}
+                <div class="col-4">
+                    <div class="card mb-4 box-shadow">
+                        <div class="card-header">
+                            <h4 class="my-2 font-weight-normal">Отзыв</h4>
+                        </div>
+                        <div class="card-body">
+                            <h1 class="card-title pricing-card-title">{{ object.first_name|title }} {{ object.last_name|title }}</h1>
+                            <p class="lead">{{ object.content|slice:50 }}</p>
+                            <ul class="list-unstyled mt-3 mb-4 text-start m-3">
+                            </ul>
+                            <a href="{% url 'catalog:blog_detail' object.pk %}" type="button"
+                               class="btn btn-lg btn-block btn-outline-info mb-2">Читать отзыв полностью</a>
+                            <a href="{% url 'catalog:blog_update' object.pk %}" type="button"
+                               class="btn btn-lg btn-block btn-outline-warning">Изменить отзыв</a>
+                            <a href="{% url 'catalog:blog_delete' object.pk %}" type="button"
+                               class="btn btn-lg btn-block btn-outline-danger">Удалить отзыв</a>
+                        </div>
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+       </div>
+{% endblock %}
