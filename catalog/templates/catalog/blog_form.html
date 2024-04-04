@@ -5,7 +5,13 @@
         {% csrf_token %}
         {{ form.as_p }}
         <div class=" pricing-header px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-            <button type="submit" class="btn btn-lg btn-block btn-outline-dark">Добавить отзыв<</button>
+            <button type="submit" class="btn btn-lg btn-block btn-outline-dark">
+                {% if object %}
+                    Сохранить отзыв
+                {% else %}
+                    Добавить отзыв
+                {% endif %}<
+            </button>
             <a href="{% url 'catalog:blog_list' %}" type="button"
                class="btn btn-lg btn-block btn-outline-primary">Отмена</a>
         </div>
