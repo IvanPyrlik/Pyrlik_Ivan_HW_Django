@@ -3,9 +3,9 @@ import random
 from django.conf import settings
 from django.contrib.auth.views import PasswordResetView
 from django.core.mail import send_mail
-from django.shortcuts import redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse_lazy, reverse
-from django.views.generic import CreateView
+from django.views.generic import CreateView, TemplateView
 
 from users.forms import UserForm, ResetPasswordForm
 from users.models import User
@@ -14,16 +14,40 @@ from users.models import User
 class RegisterView(CreateView):
     model = User
     form_class = UserForm
-    success_url = reverse_lazy('users:login')
+    success_url = reverse_lazy('catalog:product_list ')
     template_name = 'users/register.html'
 
     def form_valid(self, form):
-        new_user = form.save()
-        send_mail(subject='Поздравляем с регистрацией',
-                  message='Вы зарегистрировались, добро пожаловать!',
+        user = form.save()
+        user.is_active = False
+        current_site = self.request.get_host()
+        subject = 'Подтверждение с регистрации'
+        verification_code = ''.join(str(random.randint(0, 9)) for _ in range(8))
+        user.verification_code = verification_code
+        message = (f'Вы зарегистрировались, чтобы продолжить перейдите по ссылке'
+                   f' http://{current_site}/users/conform/ и введите код верификации {verification_code}')
+        user.save()
+        send_mail(subject=subject,
+                  message=message,
                   from_email=settings.EMAIL_HOST_USER,
-                  recipient_list=[new_user.email])
+                  recipient_list=[user.email])
+        user.save()
         return super().form_valid(form)
+
+
+class ConfirmRegisterView(TemplateView):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'users/confirm.html')
+
+    def post(self, request, *args, **kwargs):
+        verification_code = request.POST.get('verification_code')
+        user = get_object_or_404(User, verification_code=verification_code)
+        if user:
+            user.is_active = True
+            user.save()
+            return redirect('users:login')
+        return redirect('catalog:product_list')
+
 
 
 class ResetPasswordView(PasswordResetView):
