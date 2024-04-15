@@ -135,8 +135,9 @@ LOGIN_REDIRECT_URL = '/'
 LOGIN_URL = '/users/'
 LOGOUT_URL = '/users/'
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.yandex.ru'
 EMAIL_PORT = 465
-EMAIL_HOST_USER = 'admin@sky.pro'
-EMAIL_HOST_PASSWORD = '123qw456er'
+EMAIL_HOST_USER = 'JohnnyKelevra@yandex.ru'
+EMAIL_HOST_PASSWORD = 'wfbmdmsmtsnnqotp'
 EMAIL_USE_TLS = True

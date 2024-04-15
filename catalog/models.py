@@ -1,7 +1,6 @@
 from django.conf import settings
 from django.db import models
 
-
 NULLABLE = {'blank': True, 'null': True}
 
 
@@ -25,7 +24,7 @@ class Product(models.Model):
     price = models.IntegerField(default=0, verbose_name='Цена за покупку')
     date_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     date_last_change = models.DateTimeField(auto_now=True, verbose_name='Дата последнего изменения')
-
+    publication = models.BooleanField(default=False)
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, **NULLABLE, verbose_name='Владелец')
 
     def __str__(self):
@@ -35,6 +34,11 @@ class Product(models.Model):
         verbose_name = 'Продукт'
         verbose_name_plural = 'Продукты'
         ordering = ('name',)
+        permissions = [
+            ('cancel_publication', 'Can cancel publication'),
+            ('change_description', 'Can change description'),
+            ('change_category', 'Can change category'),
+        ]
 
 
 class Blog(models.Model):
@@ -50,7 +54,7 @@ class Blog(models.Model):
     class Meta:
         verbose_name = 'Отзыв'
         verbose_name_plural = 'Отзывы'
-        ordering = ['first_name', 'last_name', 'content',]
+        ordering = ['first_name', 'last_name', 'content', ]
 
     def __str__(self):
         return f'{self.first_name} {self.last_name} {self.avatar} {self.content}'
