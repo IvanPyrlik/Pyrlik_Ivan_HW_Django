@@ -7,6 +7,7 @@ from pytils.translit import slugify
 
 from catalog.forms import ProductForm, VersionForm
 from catalog.models import Product, Blog, Version
+from catalog.services import get_products_from_cache
 
 
 class ProductListView(ListView):
@@ -15,9 +16,8 @@ class ProductListView(ListView):
         'title': 'Магазин продуктов'
     }
 
-    def get_queryset(self, *args, **kwargs):
-        queryset = super().get_queryset()
-        return queryset
+    def get_queryset(self):
+        return get_products_from_cache()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
